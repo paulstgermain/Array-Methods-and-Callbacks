@@ -5,16 +5,20 @@ import { fifaData } from './fifa.js';
 /* 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 Task 1: 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
 Practice accessing data by console.log-ing the following pieces of data note, you may want to filter the data first 😉*/
 
+let fifa2014 = fifaData.filter(function(item){
+     return item["Year"] === 2014 && item["Stage"] === "Final";
+});
+console.log(fifa2014);
 //(a) Home Team name for 2014 world cup final
-
+console.log(fifa2014[0]["Home Team Name"]);
 //(b) Away Team name for 2014 world cup final
-
+console.log(fifa2014[0]["Away Team Name"]);
 //(c) Home Team goals for 2014 world cup final
-
+console.log(fifa2014[0]["Home Team Goals"]);
 //(d) Away Team goals for 2014 world cup final
-
+console.log(fifa2014[0]["Away Team Goals"]);
 //(e) Winner of 2014 world cup final */
-
+console.log(fifa2014[0]["Win conditions"]);
 
 /* 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 Task 2: 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 
 Use getFinals to do the following:
@@ -24,8 +28,8 @@ Use getFinals to do the following:
 hint - you should be looking at the stage key inside of the objects
 */
 
-function getFinals(/* code here */) {
-   /* code here */
+function getFinals(data) {
+   return data.filter(item => item["Stage"] === "Final");
 }
 
 
@@ -36,9 +40,11 @@ Use the higher-order function called getYears to do the following:
 2. Receive a callback function getFinals from task 2 
 3. Return an array called years containing all of the years in the getFinals data set*/
 
-function getYears(/* code here */) {
-    /* code here */
+function getYears(array, callback) {
+    return callback(array).map(item => item["Year"]);
 }
+
+console.log(getYears(fifaData, getFinals));
 
 
 
@@ -49,9 +55,21 @@ Use the higher-order function getWinners to do the following:
 3. Determines the winner (home or away) of each `finals` game. 
 4. Returns the names of all winning countries in an array called `winners` */ 
 
-function getWinners(/* code here */) {
-    /* code here */
+function getWinners(array, callback) {
+    let winners = [];
+    callback(array).forEach(function(item){ 
+        let homeScore = (item["Home Team Goals"] + item["Half-time Home Goals"]);
+        let awayScore = (item["Away Team Goals"] + item["Half-time Away Goals"]);
+        if(homeScore > awayScore){
+            winners.push(item["Home Team Name"]);
+        } else if(awayScore > homeScore){
+            winners.push(item["Away Team Name"]);
+        }
+});
+    return winners;
 }
+
+console.log(getWinners(fifaData, getFinals));
 
 
 
@@ -65,10 +83,15 @@ Use the higher-order function getWinnersByYear to do the following:
 hint: the strings returned need to exactly match the string in step 4.
  */
 
-function getWinnersByYear(/* code here */) {
-    /* code here */
+function getWinnersByYear(array, years, winners) {
+    let result = [];
+    for(let i = 0; i < years(array, getFinals).length; i++){
+        result.push(`In ${years(array, getFinals)[i]}, ${winners(array, getFinals)[i]} won the world cup!`);
+    }
+    return result;
 }
 
+console.log(getWinnersByYear(fifaData, getYears, getWinners));
 
 
 /* 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 Task 6: 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
@@ -81,11 +104,13 @@ Use the higher order function getAverageGoals to do the following:
  Example of invocation: getAverageGoals(getFinals(fifaData));
 */
 
-function getAverageGoals(/* code here */) {
-   /* code here */
+function getAverageGoals(finalsCB) {
+   return finalsCB.reduce(function(total, object){
+    return total + ((object["Home Team Goals"] + object["Away Team Goals"]) / finalsCB.length);
+   },0).toFixed(2);
 }
 
-
+console.log(getAverageGoals(getFinals(fifaData)));
 
 
 /// 🥅 STRETCH 🥅 ///
@@ -96,13 +121,12 @@ Create a function called `getCountryWins` that takes the parameters `data` and `
 Hint: Investigate your data to find "team initials"!
 Hint: use `.reduce` */
 
-function getCountryWins(/* code here */) {
+function getCountryWins(data, str) {
 
-    /* code here */
-
+return str;
 }
 
-
+console.log(getCountryWins(fifaData, 'FRA'));
 
 /* 💪💪💪💪💪 Stretch 2: 💪💪💪💪💪 
 Write a function called getGoals() that accepts a parameter `data` and returns the team with the most goals score per appearance (average goals for) in the World Cup finals */
