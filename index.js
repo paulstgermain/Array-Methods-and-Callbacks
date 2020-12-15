@@ -122,20 +122,42 @@ Hint: Investigate your data to find "team initials"!
 Hint: use `.reduce` */
 
 function getCountryWins(data, str) {
-
-return str;
+    let result = [];
+    data.filter(item => item["Stage"] === "Final").forEach(function(item){ 
+        let homeScore = (item["Home Team Goals"] + item["Half-time Home Goals"]);
+        let awayScore = (item["Away Team Goals"] + item["Half-time Away Goals"]);
+        if(homeScore > awayScore){
+            result.push(item["Home Team Initials"]);
+        } else if(awayScore > homeScore){
+            result.push(item["Away Team Initials"]);
+        }
+});
+return result.filter(item => item === str).length;
 }
 
-console.log(getCountryWins(fifaData, 'FRA'));
+console.log(getCountryWins(fifaData, 'BRA'));
 
 /* 💪💪💪💪💪 Stretch 2: 💪💪💪💪💪 
 Write a function called getGoals() that accepts a parameter `data` and returns the team with the most goals score per appearance (average goals for) in the World Cup finals */
 
-function getGoals(/* code here */) {
+function getGoals(data) {
+    let result = [];
 
-    /* code here */
+    data.filter(item => item["Stage"] === "Final").forEach(function(item){ 
+        let homeScore = (item["Home Team Goals"] + item["Half-time Home Goals"]);
+        let awayScore = (item["Away Team Goals"] + item["Half-time Away Goals"]);
+        if(homeScore > awayScore){
+            result.push(item);
+        } else if(awayScore > homeScore){
+            result.push(item);
+        }
+});
+
+return result;
 
 }
+
+console.log(getGoals(fifaData));
 
 
 /* 💪💪💪💪💪 Stretch 3: 💪💪💪💪💪
@@ -148,7 +170,7 @@ function badDefense(/* code here */) {
 }
 
 
-/* If you still have time, use the space below to work on any stretch goals of your chosing as listed in the README file. */
+/* If you still have time, use the space below to work on any stretch goals of your choosing as listed in the README file. */
 
 
 /* 🛑🛑🛑🛑🛑 Please do not modify anything below this line 🛑🛑🛑🛑🛑 */
